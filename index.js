@@ -14,8 +14,23 @@ const io = new Server(server, {
 io.on("connection", (socket) => {
   console.log("New socket connected:", socket.id);
 
+  // socket.on("join", (roomId) => {
+  //   socket.join(roomId);
+  //   socket.to(roomId).emit("user-joined", socket.id);
+  // });
+
   socket.on("join", (roomId) => {
     socket.join(roomId);
+
+    const clientsInRoom = Array.from(
+      io.sockets.adapter.rooms.get(roomId) || []
+    );
+    const otherClients = clientsInRoom.filter((id) => id !== socket.id);
+
+    // Inform the new user of others in the room
+    socket.emit("room-users", otherClients);
+
+    // Notify others that a new user joined
     socket.to(roomId).emit("user-joined", socket.id);
   });
 
