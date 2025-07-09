@@ -51,6 +51,11 @@ io.on("connection", (socket) => {
   });
 });
 
+socket.on("leave", (roomId) => {
+  socket.leave(roomId);
+  socket.to(roomId).emit("user-left", socket.id);
+});
+
 const PORT = process.env.PORT || 5001;
 server.listen(PORT, () =>
   console.log(`Signaling server running on port ${PORT}`)
