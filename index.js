@@ -49,11 +49,10 @@ io.on("connection", (socket) => {
   socket.on("disconnect", () => {
     console.log("Socket disconnected:", socket.id);
   });
-});
-
-socket.on("leave", (roomId) => {
-  socket.leave(roomId);
-  socket.to(roomId).emit("user-left", socket.id);
+  socket.on("leave", (roomId) => {
+    socket.leave(roomId);
+    socket.to(roomId).emit("user-left", socket.id);
+  });
 });
 
 const PORT = process.env.PORT || 5001;
